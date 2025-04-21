@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,7 +32,10 @@ public class Transaction {
     private String Category;
 
     @Column(nullable = false)
-    private LocalDate Date;
+    private LocalDate DateTransaction;
+
+    @Column(nullable = false)
+    private LocalDateTime DateCreate;
 
     @Column(nullable = false)
     private String Status;
