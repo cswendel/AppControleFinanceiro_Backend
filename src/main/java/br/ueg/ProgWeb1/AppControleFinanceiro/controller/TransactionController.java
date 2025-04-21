@@ -4,7 +4,6 @@ import br.ueg.ProgWeb1.AppControleFinanceiro.dto.TransactionDTO;
 import br.ueg.ProgWeb1.AppControleFinanceiro.model.Transaction;
 import br.ueg.ProgWeb1.AppControleFinanceiro.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +21,9 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> create(@RequestBody TransactionDTO dto) {
-        Transaction transaction = DtoToModel(dto);
-        Transaction created = transactionService.Create(transaction);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<Transaction> create(@RequestBody TransactionDTO TransactionDTO){
+        Transaction transaction = DtoToModel(TransactionDTO);
+        return ResponseEntity.ok(transactionService.Create(transaction));
     }
 
     @GetMapping
