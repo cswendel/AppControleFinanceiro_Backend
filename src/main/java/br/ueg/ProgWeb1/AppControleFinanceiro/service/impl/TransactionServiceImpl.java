@@ -6,6 +6,7 @@ import br.ueg.ProgWeb1.AppControleFinanceiro.service.TransactionService;
 import br.ueg.ProgWeb1.AppControleFinanceiro.service.exceptions.BusinessException;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,13 +20,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction Create(Transaction transaction) {
-        CreateValidation(transaction);
+        Validations(transaction);
         PrepareToCreate(transaction);
         return TransactionRepository.save(transaction);
     }
 
-    private void CreateValidation (Transaction transaction) {
-        if(transaction.getValue() == null || transaction.getValue() == 0) {
+    private void Validations(Transaction transaction) {
+        if(transaction.getValue() == null || transaction.getValue() == 0.0) {
             throw new BusinessException("Valor não pode ser zero ou vazio");
         }
 
@@ -46,34 +47,61 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
-    private Transaction PrepareToCreate (Transaction transaction) {
+    private void PrepareToCreate (Transaction transaction) {
         transaction.setDateCreate(LocalDateTime.now());
 
         if (!transaction.isType()) {
             transaction.setValue(-transaction.getValue());
         }
-
-        return transaction;
     }
 
     //Abaixo ainda será implementado, apenas ar
     @Override
     public List<Transaction> ListAll(){
-        return null;
+        return TransactionRepository.findAll();
     }
 
     @Override
-    public Transaction GetById(Long id){
-        return null;
+    public Transaction GetById(Long Id) {
+        return TransactionRepository.findById(Id)
+                .orElseThrow(() -> new BusinessException("Transação não encontrada", 404));
     }
 
     @Override
-    public Transaction Update(Transaction transaction){
-        return null;
+    public Transaction Update(Long Id, Transaction TransactionUpdate){
+        Transaction CurrentTransaction = TransactionRepository.findById(Id)
+                .orElseThrow(() -> new BusinessException("Transação não encontrada", 404));
+
+        Validations(TransactionUpdate);
+        PrepareUpdate(CurrentTransaction, TransactionUpdate);
+        CurrentTransaction.setDescription(TransactionUpdate.getDescription());
+        CurrentTransaction.setStatus(TransactionUpdate.getStatus());
+        CurrentTransaction.setCategory(TransactionUpdate.getCategory());
+        CurrentTransaction.setDateTransaction(TransactionUpdate.getDateTransaction());
+        return TransactionRepository.save(CurrentTransaction);
+    }
+
+    private static void PrepareUpdate (Transaction CurrentTransaction, Transaction TransactionUpdate) {
+        CurrentTransaction.setDateUpdate(LocalDateTime.now());
+
+        if(TransactionUpdate.isType()){
+            CurrentTransaction.setValue(TransactionUpdate.getValue());
+        } else {
+            CurrentTransaction.setValue(-TransactionUpdate.getValue());
+        }
     }
 
     @Override
-    public void Delete(Transaction transaction){
+    public Transaction Delete(Long Id){
+        Transaction transaction = this.GetById(Id);
+
+        try {
+            TransactionRepository.delete(transaction);
+        }catch (DataIntegrityViolationException e){
+            throw new BusinessException("Não pode ser removido por questões de integridade");
+        }
+
+        return transaction;
     }
 
 }

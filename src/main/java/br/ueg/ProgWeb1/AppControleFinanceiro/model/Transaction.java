@@ -32,11 +32,14 @@ public class Transaction {
     private String Category;
 
     @Column(nullable = false)
+    private String Status;
+
+    @Column(nullable = false)
     private LocalDate DateTransaction;
 
     @Column(nullable = false)
     private LocalDateTime DateCreate;
 
-    @Column(nullable = false)
-    private String Status;
+    @Column
+    private LocalDateTime DateUpdate;
 }
