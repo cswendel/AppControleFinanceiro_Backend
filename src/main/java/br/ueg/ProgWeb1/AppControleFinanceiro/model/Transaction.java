@@ -12,26 +12,26 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Transacao {
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @Column(nullable = false)
-    private Double Valor;
+    private Double Value;
 
     @Column(nullable = false)
-    private boolean Tipo; //Entrada=1 Saída=0
+    private boolean Type; //Entrada=1 Saída=0
 
     @Column(nullable = false)
-    private String Descricao;
+    private String Description;
 
     @Column(nullable = false)
-    private String Categoria;
+    private String Category;
 
     @Column(nullable = false)
-    private LocalDate Data;
+    private LocalDate Date;
 
     @Column(nullable = false)
     private String Status;

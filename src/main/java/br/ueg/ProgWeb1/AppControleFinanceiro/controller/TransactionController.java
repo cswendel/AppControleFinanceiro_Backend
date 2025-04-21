@@ -1,12 +1,12 @@
 package br.ueg.ProgWeb1.AppControleFinanceiro.controller;
 
-import br.ueg.ProgWeb1.AppControleFinanceiro.model.Transacao;
+import br.ueg.ProgWeb1.AppControleFinanceiro.model.Transaction;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping(path = "/transacao")
+@RequestMapping(path = "/transaction")
 @Controller
-public class TransacaoController {
+public class TransactionController {
 
-    private Transacao transacao;
+    private Transaction transaction;
 }
