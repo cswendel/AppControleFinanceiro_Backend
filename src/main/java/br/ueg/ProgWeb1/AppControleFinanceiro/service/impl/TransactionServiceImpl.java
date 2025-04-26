@@ -26,6 +26,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void Validations(Transaction transaction) {
+        if (transaction.getType() == null) {
+            throw new BusinessException("Tipo não pode ser zero ou vazio");
+        }
+
         if(transaction.getValue() == null || transaction.getValue() == 0.0) {
             throw new BusinessException("Valor não pode ser zero ou vazio");
         }
@@ -50,7 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
     private void PrepareToCreate (Transaction transaction) {
         transaction.setDateCreate(LocalDateTime.now());
 
-        if (!transaction.isType()) {
+        if (!transaction.getType()) {
             transaction.setValue(-transaction.getValue());
         }
     }
@@ -84,7 +88,7 @@ public class TransactionServiceImpl implements TransactionService {
     private static void PrepareUpdate (Transaction CurrentTransaction, Transaction TransactionUpdate) {
         CurrentTransaction.setDateUpdate(LocalDateTime.now());
 
-        if(TransactionUpdate.isType()){
+        if(TransactionUpdate.getType()){
             CurrentTransaction.setValue(TransactionUpdate.getValue());
         } else {
             CurrentTransaction.setValue(-TransactionUpdate.getValue());

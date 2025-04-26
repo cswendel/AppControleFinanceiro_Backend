@@ -23,7 +23,7 @@ public class Transaction {
     private Double Value;
 
     @Column(nullable = false)
-    private boolean Type; //Entrada=1 Saída=0
+    private Boolean Type; //Entrada=1 Saída=0
 
     @Column(nullable = false)
     private String Description;
